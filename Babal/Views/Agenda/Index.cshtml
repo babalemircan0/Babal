@@ -1,0 +1,398 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Babal | Ajanda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --bg-light: #f4f7f6;
+            --text-dark: #1e272e;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            --border-color: #e1e8ed;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVİGASYON --- */
+        nav {
+            background: white;
+            height: 85px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 8%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 28px;
+            letter-spacing: -1.5px;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+            .logo span {
+                color: var(--primary-green);
+            }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+            .nav-links button {
+                background: none;
+                border: none;
+                margin-left: 25px;
+                font-weight: 700;
+                color: #8395a7;
+                cursor: pointer;
+                font-size: 13px;
+                text-transform: uppercase;
+            }
+
+        .container {
+            padding: 40px 8%;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        /* --- ÜST PANEL (FOCUS VIEW) --- */
+        .focus-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            border-left: 10px solid var(--primary-green);
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: 0.3s ease;
+            position: relative;
+        }
+
+        .focus-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .focus-info {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--primary-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .focus-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 10px 0;
+            letter-spacing: -1px;
+            color: var(--text-dark);
+        }
+
+        .focus-desc {
+            font-size: 16px;
+            color: #8395a7;
+            font-weight: 500;
+        }
+
+        /* Edit Alanı */
+        .edit-area {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+        }
+
+            .edit-area.visible {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+        .input-babal {
+            flex: 1;
+            border: 1px solid #eee;
+            padding: 14px;
+            border-radius: 8px;
+            font-family: 'Inter';
+            font-weight: 600;
+            outline: none;
+            font-size: 15px;
+            background: #fafafa;
+        }
+
+        .btn-babal {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            .btn-babal:hover {
+                transform: translateY(-2px);
+                opacity: 0.9;
+            }
+
+        .btn-delete {
+            background: #feebe7;
+            color: #e74c3c;
+            margin-left: 10px;
+        }
+
+        /* --- ALT PANEL (AJANDA TABLOSU) --- */
+        .agenda-wrapper {
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            min-width: 800px;
+        }
+
+        th {
+            padding: 20px 10px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #bdc3c7;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        td {
+            border: 1px solid #f1f3f5;
+            height: 75px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            td:first-child {
+                width: 90px;
+                font-size: 12px;
+                font-weight: 800;
+                color: #bdc3c7;
+                text-align: center;
+                border: none;
+                cursor: default;
+                background: white;
+            }
+
+            td:not(:first-child):hover {
+                background: #f8fdfa;
+                border-color: var(--primary-green);
+            }
+
+            /* Görevli Hücre İşareti */
+            td.has-task::before {
+                content: '●';
+                position: absolute;
+                bottom: 8px;
+                right: 10px;
+                color: var(--primary-green);
+                font-size: 18px;
+            }
+
+            td.has-task {
+                background: #f9fffb;
+            }
+
+            td.active {
+                background: #f0fff4 !important;
+                border: 2px solid var(--primary-green) !important;
+                box-shadow: inset 0 0 10px rgba(46, 204, 113, 0.1);
+                z-index: 5;
+            }
+
+        .cell-preview {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dark);
+            padding: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">BABAL<span>●</span></a>
+        <div class="nav-links">
+            <button onclick="location.href='/Home/Index'">ANA SAYFA</button>
+            <button onclick="location.href='/Gunluk/Index'">GÜNLÜK</button>
+            <button style="color: var(--text-dark)">AJANDA</button>
+          
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="focus-panel" id="focus-panel">
+            <div id="focus-content">
+                <span class="focus-info" id="display-info">Babal Ajanda</span>
+                <div class="focus-title" id="display-title">Bir Saat Dilimi Seç</div>
+                <div class="focus-desc" id="display-desc">Haftalık planlarını düzenlemek için aşağıdaki tablodan bir hücreye tıkla.</div>
+            </div>
+
+            <div class="edit-area" id="edit-area">
+                <input type="text" id="task-input" class="input-babal" placeholder="Görevi buraya yaz ve Enter'a bas...">
+                <button class="btn-babal" onclick="updateTask()">KAYDET</button>
+                <button class="btn-babal btn-delete" onclick="clearTask()">SİL</button>
+            </div>
+        </div>
+
+        <div class="agenda-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>SAAT</th>
+                        <th>PZT</th>
+                        <th>SAL</th>
+                        <th>ÇAR</th>
+                        <th>PER</th>
+                        <th>CUM</th>
+                        <th>CMT</th>
+                        <th>PAZ</th>
+                    </tr>
+                </thead>
+                <tbody id="agenda-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const daysFull = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
+        let selectedCell = null;
+
+        // Tabloyu Oluştur (08:00 - 22:00)
+        const tbody = document.getElementById('agenda-body');
+        for (let h = 8; h <= 22; h++) {
+            const timeLabel = `${h < 10 ? '0' + h : h}:00`;
+            const row = document.createElement('tr');
+            let cellsHtml = `<td>${timeLabel}</td>`;
+            for (let d = 0; d < 7; d++) {
+                cellsHtml += `<td id="cell-${d}-${h}" onclick="selectCell(this, '${daysFull[d]}', '${timeLabel}')"></td>`;
+            }
+            row.innerHTML = cellsHtml;
+            tbody.appendChild(row);
+        }
+
+        // VERİ TABANINDAN VERİLERİ YÜKLE
+        async function loadFromDatabase() {
+            const res = await fetch('/Agenda/GetAgendaData');
+            const data = await res.json();
+            for (let id in data) {
+                const td = document.getElementById(id);
+                if (td) {
+                    td.setAttribute('data-task', data[id]);
+                    td.classList.add('has-task');
+                    td.innerHTML = `<span class="cell-preview">${data[id]}</span>`;
+                }
+            }
+        }
+
+        function selectCell(cell, day, time) {
+            if (selectedCell) selectedCell.classList.remove('active');
+            selectedCell = cell;
+            cell.classList.add('active');
+
+            const editArea = document.getElementById('edit-area');
+            const displayTitle = document.getElementById('display-title');
+            const displayInfo = document.getElementById('display-info');
+            const taskInput = document.getElementById('task-input');
+
+            editArea.classList.add('visible');
+            displayInfo.innerText = `${day} | ${time}`;
+
+            const savedTask = cell.getAttribute('data-task');
+            if (savedTask) {
+                displayTitle.innerText = savedTask;
+                taskInput.value = savedTask;
+            } else {
+                displayTitle.innerText = "Boş Slot";
+                taskInput.value = "";
+            }
+            taskInput.focus();
+        }
+
+        async function updateTask() {
+            if (!selectedCell) return;
+            const val = document.getElementById('task-input').value.trim();
+            const cellId = selectedCell.id;
+
+            // Veri tabanına gönder
+            const formData = new URLSearchParams();
+            formData.append('cellId', cellId);
+            formData.append('task', val);
+
+            const res = await fetch('/Agenda/UpdateTask', { method: 'POST', body: formData });
+
+            if (res.ok) {
+                if (val !== "") {
+                    selectedCell.setAttribute('data-task', val);
+                    selectedCell.classList.add('has-task');
+                    selectedCell.innerHTML = `<span class="cell-preview">${val}</span>`;
+                    document.getElementById('display-title').innerText = val;
+                } else {
+                    clearTaskUI();
+                }
+            }
+        }
+
+        function clearTaskUI() {
+            selectedCell.removeAttribute('data-task');
+            selectedCell.classList.remove('has-task');
+            selectedCell.innerHTML = "";
+            document.getElementById('display-title').innerText = "Boş Slot";
+            document.getElementById('task-input').value = "";
+        }
+
+        async function clearTask() {
+            document.getElementById('task-input').value = "";
+            await updateTask();
+        }
+
+        document.getElementById('task-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') updateTask();
+        });
+
+        window.onload = loadFromDatabase;
+    </script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+﻿@model Babal.Models.User
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Babal - Hoş Geldiniz</title>
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(46, 213, 115, 0.15);
+            filter: blur(80px);
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 450px;
+            height: 450px;
+            top: -100px;
+            right: -50px;
+        }
+
+        .circle-2 {
+            width: 350px;
+            height: 350px;
+            bottom: -50px;
+            left: -50px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+        }
+
+        .logo-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .babal-logo {
+            width: 320px;
+            height: auto;
+            filter: drop-shadow(2px 0px 0px rgba(255,0,0,0.1)) drop-shadow(-1px 0px 0px rgba(0,255,255,0.1));
+        }
+
+        .form-container {
+            flex: 1;
+            max-width: 400px;
+            perspective: 1000px;
+        }
+
+        .form-card {
+            background: #ffffff;
+            padding: 45px;
+            border-radius: 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+        }
+
+        .hidden {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        @@keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h2 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            letter-spacing: -0.8px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+            .input-group label {
+                display: block;
+                font-size: 12px;
+                font-weight: 700;
+                color: #888;
+                margin-bottom: 8px;
+                text-transform: uppercase;
+            }
+
+            .input-group input {
+                width: 100%;
+                padding: 14px 18px;
+                border: 2px solid #f1f2f6;
+                border-radius: 12px;
+                font-size: 15px;
+                transition: 0.3s;
+                background: #fafafa;
+            }
+
+                .input-group input:focus {
+                    outline: none;
+                    border-color: #2ed573;
+                    background: #fff;
+                    box-shadow: 0 5px 15px rgba(46, 213, 115, 0.1);
+                }
+
+        .action-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: #2ed573;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+            .action-btn:hover {
+                background-color: #26af5f;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(46, 213, 115, 0.25);
+            }
+
+        .toggle-link {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 14px;
+            color: #636e72;
+        }
+
+            .toggle-link span {
+                color: #2ed573;
+                text-decoration: none;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
+        @@media (max-width: 850px) {
+            .container {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .circle-1 {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+
+    <div class="container">
+        <div class="logo-section">
+            <svg class="babal-logo" viewBox="0 0 350 100" xmlns="http://www.w3.org/2000/svg">
+                <text x="0" y="75" font-family="Inter" font-weight="900" font-size="72" fill="#1e272e" letter-spacing="-2px">BABAL</text>
+                <circle cx="270" cy="60" r="14" fill="#2ed573" />
+            </svg>
+        </div>
+
+        <div class="form-container">
+
+            <div id="login-form" class="form-card active">
+                <h2>Giriş Yap</h2>
+                <form asp-controller="Account" asp-action="Login" method="post">
+                    <div class="input-group">
+                        <label>E-posta</label>
+                        <input type="email" name="Email" placeholder="E-posta adresiniz" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Şifre</label>
+                        <input type="password" name="Password" placeholder="••••••••" required>
+                    </div>
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div style="color:#ff4757; font-size:12px; margin-bottom:10px; font-weight:600;">⚠️ @TempData["Error"]</div>
+                    }
+                    @if (TempData["Success"] != null)
+                    {
+                        <div style="color:#2ed573; font-size:12px; margin-bottom:10px; font-weight:600;">✅ @TempData["Success"]</div>
+                    }
+
+                    <button type="submit" class="action-btn">Giriş Yap</button>
+                </form>
+                <div class="toggle-link">
+                    Hesabınız yok mu? <span onclick="toggleForm()">Hesap Oluştur</span>
+                </div>
+            </div>
+
+            <div id="register-form" class="form-card hidden">
+                <h2>Hesap Oluştur</h2>
+                <form asp-controller="Account" asp-action="Register" method="post">
+                    <div class="input-group">
+                        <label>Ad Soyad</label>
+                        <input type="text" name="FullName" placeholder="Adınız Soyadınız" required>
+                    </div>
+                    <div class="input-group">
+                        <label>E-posta</label>
+                        <input type="email" name="Email" placeholder="E-posta adresiniz" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Şifre</label>
+                        <input type="password" name="Password" placeholder="Yeni şifre oluşturun" required>
+                    </div>
+                    <button type="submit" class="action-btn">Hesabı Oluştur ve Giriş Yap</button>
+                </form>
+                <div class="toggle-link">
+                    Zaten üye misiniz? <span onclick="toggleForm()">Giriş Yap</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+
+            if (loginForm.classList.contains('active')) {
+                loginForm.classList.replace('active', 'hidden');
+                setTimeout(() => {
+                    registerForm.classList.replace('hidden', 'active');
+                }, 300);
+            } else {
+                registerForm.classList.replace('active', 'hidden');
+                setTimeout(() => {
+                    loginForm.classList.replace('hidden', 'active');
+                }, 300);
+            }
+        }
+    </script>
+</body>
+</html>
