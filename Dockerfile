@@ -1,22 +1,12 @@
- # 1. Aşama: Uygulamayı Derleme
+# 1. Aşama: Uygulamayı Derleme
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Proje dosyasını kopyala ve paketleri indir
-COPY ["Babal.csproj", "./"]
-RUN dotnet restore "Babal.csproj"
-
-# Tüm dosyaları kopyala ve yayınla
+# Tüm dosyaları kopyala (Klasör yapısını korumak için)
 COPY . .
-RUN dotnet publish "Babal.csproj" -c Release -o /app/publish
 
-# 2. Aşama: Uygulamayı Çalıştırma
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
-COPY --from=build /app/publish .
+# .csproj dosyasını bul ve restore et
+RUN dotnet restore "Babal.csproj" || dotnet restore "Babal/Babal.csproj"
 
-# Render'ın portuyla uyumlu hale getir
-ENV ASPNETCORE_URLS=http://+:8080
-EXPOSE 8080
-
-ENTRYPOINT ["dotnet", "Babal.dll"]
+# Yayınla (Dosya nerede olursa olsun bulup derler)
+RUN dotnet publish -c Release -o /app/publish
