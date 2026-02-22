@@ -1,12 +1,24 @@
-# 1. Aşama: Uygulamayı Derleme
+# 1. Aşama: Derleme (Build)
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Tüm dosyaları kopyala (Klasör yapısını korumak için)
+# Projedeki tüm dosyaları kopyala
 COPY . .
 
-# .csproj dosyasını bul ve restore et
-RUN dotnet restore "Babal.csproj" || dotnet restore "Babal/Babal.csproj"
+# Proje dosyasını arayıp bul ve paketleri geri yükle (Restore)
+RUN find . -name "*.csproj" -exec dotnet restore {} \;
 
-# Yayınla (Dosya nerede olursa olsun bulup derler)
-RUN dotnet publish -c Release -o /app/publish
+# Projeyi derle ve 'publish' klasörüne çıkar
+RUN find . -name "*.csproj" -exec dotnet publish {} -c Release -o /app/publish \;
+
+# 2. Aşama: Çalıştırma (Runtime)
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/publish .
+
+# Port ve başlangıç komutu
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
+
+# 'Babal.dll' dosyasını bulup çalıştırır
+ENTRYPOINT ["dotnet", "Babal.dll"]
